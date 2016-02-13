@@ -1,21 +1,19 @@
 # One max per physical node
 lb:
-  image: camptocamp/haproxy-consul:latest
-  container_name: 'load-balancer'
+  build: ./nginx
+  container_name: 'nginx'
   environment:
-    HAPROXY_DOMAIN: '127.0.0.1.xip.io:test'
     SERVICE_80_IGNORE: 'yes'
-    SERVICE_8080_NAME: 'proxy-admin_infra'
+    SERVICE_8080_NAME: 'nginx-proxy'
   ports:
     - "80:80"
-    - "8080"
   links:
     - "consul"
 
 # Only one for the whole cluster
 consul:
   command: -server -bootstrap
-  image: progrium/consul:latest
+  image: gliderlabs/consul-server:latest
   container_name: 'consul'
   environment:
     SERVICE_53_IGNORE: 'yes'
@@ -24,7 +22,19 @@ consul:
     SERVICE_8302_IGNORE: 'yes'
     SERVICE_8400_IGNORE: 'yes'
     SERVICE_8500_NAME: 'consul-admin_infra'
-
+  ports:
+    - 8600:8600
+    - 8500:8500
+  expose:
+    - 53
+    - 8300
+    - 8301
+    - 8302
+    - 8400
+    - 8500
+    - 8600
+  dns:
+    - 127.0.0.1
 # Exactly one per physical node
 registrator:
   command: "-internal consul://consul:8500"

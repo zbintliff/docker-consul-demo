@@ -1,0 +1,29 @@
+user nginx;
+worker_processes 1;
+
+daemon off;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  upstream webapp {
+    {{ range service "www_hello" }}
+        server {{ .Address }}:{{ .Port }};
+    {{ end }}
+    least_conn;
+  }
+
+  server {
+    listen 80;
+    server_name foo;
+
+    root /usr/share/nginx/html;
+
+    location / {
+      proxy_pass http://webapp;
+      proxy_redirect off;
+    }
+  }
+}
