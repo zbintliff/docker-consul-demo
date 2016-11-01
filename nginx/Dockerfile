@@ -1,6 +1,6 @@
 FROM centos:6
 
-ENV CONSUL_TEMPLATE_VERSION=0.11.1
+ENV CONSUL_TEMPLATE_VERSION=0.16.0
 
 ADD http://nginx.org/packages/rhel/6/x86_64/RPMS/nginx-1.8.1-1.el6.ngx.x86_64.rpm /tmp/
 

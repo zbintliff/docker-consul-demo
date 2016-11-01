@@ -11,7 +11,7 @@ http {
   upstream webapp {
     {{ range service "www_hello" }}
         server {{ .Address }}:{{ .Port }};
-    {{ end }}
+    {{else}}server 127.0.0.1:65535; # force a 502{{end}}
     least_conn;
   }
 

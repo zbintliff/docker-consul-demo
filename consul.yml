@@ -3,10 +3,9 @@ lb:
   build: ./nginx
   container_name: 'nginx'
   environment:
-    SERVICE_80_IGNORE: 'yes'
     SERVICE_8080_NAME: 'nginx-proxy'
   ports:
-    - "80:80"
+    - "8080:80"
   links:
     - "consul"
 
@@ -23,7 +22,6 @@ consul:
     SERVICE_8400_IGNORE: 'yes'
     SERVICE_8500_NAME: 'consul-admin_infra'
   ports:
-    - 8600:8600
     - 8500:8500
   expose:
     - 53
